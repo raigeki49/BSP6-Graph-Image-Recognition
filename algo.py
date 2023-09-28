@@ -355,3 +355,16 @@ for edge in Edges:
 #print(id[10][6].color)
 
 image.save("second iteration.png")
+
+polished_Edges = []
+polished_Vertices = []
+for edge in Edges:
+       if not(edge.get_size() == 0):
+              polished_Edges.append(edge)
+
+for vertex in Vertices:
+       if not(vertex.get_size() == 0):
+              polished_Vertices.append(vertex)
+
+print(len(polished_Edges))
+print(len(polished_Vertices))

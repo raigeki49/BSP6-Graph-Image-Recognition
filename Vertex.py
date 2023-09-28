@@ -8,3 +8,6 @@ class Vertex:
 
     def remove(self,x,y):
         self.pixel_coordinates.remove((x,y))
+
+    def get_size(self):
+        return len(self.pixel_coordinates)
