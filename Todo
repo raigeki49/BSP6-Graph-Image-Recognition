@@ -1,0 +1,8 @@
+Todo:
+
+Simplify the code using loops
+Impelement multiple directions for passes to make it faster
+Make sure it works
+Once the image is fully parsed, extract the graph structure as adjancency list
+
+Draw the extract graph (either use GraphViz to draw it from scratch, or use the base image as reference to place the vertices).

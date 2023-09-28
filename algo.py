@@ -17,6 +17,14 @@ Vertices = []
 Edges = []
 colors = {0}
 #Identify the pixel
+
+#Define a way to change the order of iteration to improve subsequent passes
+# def f(flip_i_index)
+# range_i = range(1,im.size[1] - 1)
+# if flip_i_index:
+# 	range_i = range(im.size[1] - 1, 0, -1)
+# for i in range(range_i):
+
 for j in range(1,im.size[1] - 1):
     for i in range(1,im.size[0] - 1):
         pixel = im.getpixel((i,j))
@@ -33,6 +41,14 @@ for j in range(1,im.size[1] - 1):
             down_left_pixel = im.getpixel((i - 1,j + 1))
             down_pixel = im.getpixel((i,j + 1))
             down_right_pixel = im.getpixel((i + 1,j + 1))
+
+            #Can simplify everything by putting it in a loop like this
+            # neighbors = [
+            # [i-1,j-1],
+            # [i,j-1],....
+            # ]
+            # for x,y in neighbors:
+
 
             if id[j][i] == 0:
                 if (pixel == down_right_pixel) and not(id[j + 1][i + 1]==0):  
