@@ -31,7 +31,7 @@ for j in range(1,im.size[1] - 1):
         #colors.add(pixel)
         if not(pixel == color_white):
 
-            up_left_pixel = im.getpixel((i - 1,j - 1))
+            """up_left_pixel = im.getpixel((i - 1,j - 1))
             up_pixel = im.getpixel((i,j - 1))
             up_right_pixel = im.getpixel((i + 1,j - 1))
 
@@ -40,18 +40,21 @@ for j in range(1,im.size[1] - 1):
 
             down_left_pixel = im.getpixel((i - 1,j + 1))
             down_pixel = im.getpixel((i,j + 1))
-            down_right_pixel = im.getpixel((i + 1,j + 1))
+            down_right_pixel = im.getpixel((i + 1,j + 1))"""
 
             #Can simplify everything by putting it in a loop like this
-            # neighbors = [
-            # [i-1,j-1],
-            # [i,j-1],....
-            # ]
-            # for x,y in neighbors:
+            flag = False
+            neighbors = [[j + 1,i + 1],[j + 1,i],[j + 1,i - 1],[j,i + 1],[j,i - 1],[j - 1,i + 1],[j - 1,i],[j - 1,i - 1]]
+
+            for x,y in neighbors:
+                #print(x,y)
+                if id[j][i] == 0 and not(flag):
+                    if (pixel == im.getpixel((y, x))) and not(id[x][y]==0):  
+                        id[j][i] = id[x][y]
+                        flag = True
 
 
-            if id[j][i] == 0:
-                if (pixel == down_right_pixel) and not(id[j + 1][i + 1]==0):  
+                """if (pixel == down_right_pixel) and not(id[j + 1][i + 1]==0):  
                     id[j][i] = id[j + 1][i + 1]
                     #print("upleft")
 
@@ -88,22 +91,31 @@ for j in range(1,im.size[1] - 1):
                 elif pixel == up_left_pixel and not(id[j - 1][i - 1]==0):                          
                                     id[j][i] = id[j - 1][i - 1]
                                     
-                                    #print("upleft")
+                                    #print("upleft")"""
                 
+            if id[j][i] == 0 and not(flag):
+                if pixel == color_black:
+                    
+                    id[j][i] = Edge.Edge(tuple(np.random.choice(range(256), size=3)))
+                    #id[j][i] = Edge.Edge(pixel)
+                    Edges.append(id[j][i])
                 else:
-                    if pixel == color_black:
-                        
-                        id[j][i] = Edge.Edge(tuple(np.random.choice(range(256), size=3)))
-                        #id[j][i] = Edge.Edge(pixel)
-                        Edges.append(id[j][i])
-                    else:
-                        id[j][i] = Vertex.Vertex(tuple(np.random.choice(range(256), size=3)))
-                        #id[j][i] = Vertex.Vertex(pixel)
-                        Vertices.append(id[j][i])
+                    id[j][i] = Vertex.Vertex(tuple(np.random.choice(range(256), size=3)))
+                    #id[j][i] = Vertex.Vertex(pixel)
+                    Vertices.append(id[j][i])
             
             id[j][i].add(i,j)
 
-            if pixel == up_left_pixel:
+
+            for x,y in neighbors:
+
+                if pixel == im.getpixel((y, x)):
+                    if not(id[x][y]==0):
+                        id[x][y].remove(y, x)
+                    id[x][y] = id[j][i]
+                    id[x][y].add(y, x)
+
+            """if pixel == up_left_pixel:
                 if not(id[j - 1][i - 1]==0):
                     id[j - 1][i - 1].remove(i - 1, j - 1)
                 id[j - 1][i - 1] = id[j][i]
@@ -157,7 +169,7 @@ for j in range(1,im.size[1] - 1):
                     id[j + 1][i + 1].remove(i + 1,j + 1)
                 id[j + 1][i + 1] = id[j][i]
                 id[j + 1][i + 1].add(i + 1,j + 1)
-                #print("upleft")
+                #print("upleft")"""
 
 
   
@@ -179,6 +191,8 @@ for edge in Edges:
 
 image.save("first iteration.png")
 print(colors)
+
+"""
 for count in range(0,50):
     for j in range(1,im.size[1] - 1):
         for i in range(1,im.size[0] - 1):
@@ -260,7 +274,7 @@ for count in range(0,50):
                     id[j][i] = biggest_count[0]
                     id[j][i].add(i,j)
 
-                """if (pixel == down_right_pixel) and not(id[j + 1][i + 1]==id[j][i]):
+                if (pixel == down_right_pixel) and not(id[j + 1][i + 1]==id[j][i]):
                     id[j][i].remove(i,j)
                     id[j][i] = id[j + 1][i + 1]
                     id[j][i].add(i,j)
@@ -306,9 +320,9 @@ for count in range(0,50):
                     id[j][i].remove(i,j)                
                     id[j][i] = id[j - 1][i - 1]
                     id[j][i].add(i,j)
-                    #print("upleft")"""
+                    #print("upleft")
                  
-"""
+
 for j in reversed(range(1,im.size[1] - 1)):
     for i in reversed(range(1,im.size[0] - 1)):
         pixel = im.getpixel((i,j))
@@ -351,7 +365,7 @@ for j in reversed(range(1,im.size[1] - 1)):
                     #id[j][i] = Vertex.Vertex(pixel)
                     Vertices.append(id[j][i])
 
-            id[j][i].add(i,j)"""
+            id[j][i].add(i,j)
 
         
 #draw image
@@ -380,7 +394,7 @@ for edge in Edges:
 
 for vertex in Vertices:
        if not(vertex.get_size() == 0):
-              polished_Vertices.append(vertex)
+              polished_Vertices.append(vertex)"""
 
 print(len(polished_Edges))
 print(len(polished_Vertices))
