@@ -2,8 +2,9 @@ import glob
 from PIL import Image, ImageDraw
 import numpy as np
 import Vertex, Edge
+import os
 
-image_path = "goodGraphs/graph3.png"
+image_path = "goodGraphs/graph1.png"
 
 folder_path ="iteration images/"
 #colors in the image graph1
@@ -57,6 +58,7 @@ for n in range(0,8):
 
                 flag = False
 
+                #define in what order the neighbors should be checked
                 if n%4==1:
                     neighbors = [[j - 1,i + 1],[j - 1,i],[j - 1,i - 1],[j,i + 1],[j,i - 1],[j + 1,i + 1],[j + 1,i],[j + 1,i - 1]]
 
@@ -103,6 +105,7 @@ for n in range(0,8):
                             id[x][y] = id[j][i]
                             id[x][y].add(y, x)"""
 
+    #change the direction with which we iterate through the pixels
     if n%4==1:
         flip_j(True)
 
@@ -145,7 +148,44 @@ for vertex in Vertices:
        if not(vertex.get_size() == 0):
               polished_Vertices.append(vertex)
 
-print(len(polished_Edges))
-print(len(polished_Vertices))
+#print(len(polished_Edges))
+#print(len(polished_Vertices))
 
 make_gif("iteration images")
+
+neighbors = [[j - 1,i - 1],[j - 1,i],[j - 1,i + 1],[j,i - 1],[j,i + 1],[j + 1,i - 1],[j + 1,i],[j + 1,i + 1]]
+
+for edge in polished_Edges:
+    for pixel in edge.pixel_coordinates:
+        #print(pixel)
+        if not(edge.full):
+            i,j = pixel
+            neighbors = [[j - 1,i - 1],[j - 1,i],[j - 1,i + 1],[j,i - 1],[j,i + 1],[j + 1,i - 1],[j + 1,i],[j + 1,i + 1]]
+            for y,x in neighbors:
+                if type(id[y][x])==Vertex.Vertex:
+                    edge.addVertex(id[y][x])
+
+G =[]
+for edge in polished_Edges:
+    G.append(edge.Verticies)
+
+def render_digraph(G):
+    def g():
+        for p, c in G:
+            yield  '"{}" -> "{}"'.format(p, c)
+
+    lines = "\n".join(g())
+
+    def f():
+        for p, c in G:
+            yield  '"{}" -> "{}"'.format(c, p)
+    
+    lines = lines + "\n".join(f())
+    return """
+    digraph {{
+    {}
+    }}
+    """.format(lines)
+
+with open("graph.dot", "w") as fo:
+  fo.write(render_digraph(G))

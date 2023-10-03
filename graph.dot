@@ -1,0 +1,23 @@
+
+    digraph {
+    "<Vertex.Vertex object at 0x000001508A0AAB90>" -> "<Vertex.Vertex object at 0x00000150DA283DC0>"
+"<Vertex.Vertex object at 0x00000150DA283DC0>" -> "<Vertex.Vertex object at 0x000001508A0AAF50>"
+"<Vertex.Vertex object at 0x000001508A0AB130>" -> "<Vertex.Vertex object at 0x00000150DA283DC0>"
+"<Vertex.Vertex object at 0x000001508A0AAB90>" -> "<Vertex.Vertex object at 0x000001508A0AB0D0>"
+"<Vertex.Vertex object at 0x000001508A0AAB90>" -> "<Vertex.Vertex object at 0x000001508A0AAF50>"
+"<Vertex.Vertex object at 0x000001508A0AAF50>" -> "<Vertex.Vertex object at 0x000001508A0AB4F0>"
+"<Vertex.Vertex object at 0x000001508A0AB490>" -> "<Vertex.Vertex object at 0x000001508A0AAF50>"
+"<Vertex.Vertex object at 0x000001508A0AB490>" -> "<Vertex.Vertex object at 0x000001508A0AB0D0>"
+"<Vertex.Vertex object at 0x000001508A0AB130>" -> "<Vertex.Vertex object at 0x000001508A0AB4F0>"
+"<Vertex.Vertex object at 0x000001508A0AB490>" -> "<Vertex.Vertex object at 0x000001508A0AB4F0>""<Vertex.Vertex object at 0x00000150DA283DC0>" -> "<Vertex.Vertex object at 0x000001508A0AAB90>"
+"<Vertex.Vertex object at 0x000001508A0AAF50>" -> "<Vertex.Vertex object at 0x00000150DA283DC0>"
+"<Vertex.Vertex object at 0x00000150DA283DC0>" -> "<Vertex.Vertex object at 0x000001508A0AB130>"
+"<Vertex.Vertex object at 0x000001508A0AB0D0>" -> "<Vertex.Vertex object at 0x000001508A0AAB90>"
+"<Vertex.Vertex object at 0x000001508A0AAF50>" -> "<Vertex.Vertex object at 0x000001508A0AAB90>"
+"<Vertex.Vertex object at 0x000001508A0AB4F0>" -> "<Vertex.Vertex object at 0x000001508A0AAF50>"
+"<Vertex.Vertex object at 0x000001508A0AAF50>" -> "<Vertex.Vertex object at 0x000001508A0AB490>"
+"<Vertex.Vertex object at 0x000001508A0AB0D0>" -> "<Vertex.Vertex object at 0x000001508A0AB490>"
+"<Vertex.Vertex object at 0x000001508A0AB4F0>" -> "<Vertex.Vertex object at 0x000001508A0AB130>"
+"<Vertex.Vertex object at 0x000001508A0AB4F0>" -> "<Vertex.Vertex object at 0x000001508A0AB490>"
+    }
+    
