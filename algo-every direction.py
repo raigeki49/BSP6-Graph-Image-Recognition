@@ -1,11 +1,11 @@
+import glob
 from PIL import Image, ImageDraw
 import numpy as np
 import Vertex, Edge
 
 image_path = "goodGraphs/graph3.png"
 
-file_name = "first iteration"
-
+folder_path ="iteration images/"
 #colors in the image graph1
 color_white = (255, 255, 255)
 color_black = (0, 0, 0)
@@ -26,72 +26,113 @@ Edges = []
 
 #colors = {0}
 
-#Define a way to change the order of iteration to improve subsequent passes
-# def f(flip_i_index)
-# range_i = range(1,im.size[1] - 1)
-# if flip_i_index:
-# 	range_i = range(im.size[1] - 1, 0, -1)
-# for i in range(range_i):
+range_i = range(1,im.size[0] - 1)
+range_j = range(1,im.size[1] - 1)
+
+def flip_i(flip_i_index):
+    global range_i
+    range_i = range(1,im.size[0] - 1)
+    if flip_i_index:
+        range_i = range(im.size[0] - 1, 0, -1)
+
+def flip_j(flip_j_index):
+    global range_j
+    range_j = range(1,im.size[1] - 1)
+    if flip_j_index:
+        range_j = range(im.size[1] - 1, 0, -1)
+
+def make_gif(frame_folder):
+    frames = [Image.open(image) for image in glob.glob(f"{frame_folder}/*.png")]
+    frame_one = frames[0]
+    frame_one.save("iterations.gif", format="GIF", append_images=frames,
+               save_all=True, duration=300, loop=0)
 
 #Identify the pixel
-for j in range(1,im.size[1] - 1):
-    for i in range(1,im.size[0] - 1):
-        pixel = im.getpixel((i,j))
+for n in range(0,8):
+    for j in range_j:
+        for i in range_i:
+            pixel = im.getpixel((i,j))
 
-        if not(pixel == color_white):
+            if not(pixel == color_white):
 
-            flag = False
-            neighbors = [[j + 1,i + 1],[j + 1,i],[j + 1,i - 1],[j,i + 1],[j,i - 1],[j - 1,i + 1],[j - 1,i],[j - 1,i - 1]]
+                flag = False
 
-            #center pixel tries to copy the object of the neighboor pixel
-            for x,y in neighbors:
-                if id[j][i] == 0 and not(flag):
-                    if (pixel == im.getpixel((y, x))) and not(id[x][y]==0):  
-                        id[j][i] = id[x][y]
-                        flag = True
-            
-            #If the pixel has found no neighboor whose object it can copy it will create its own object.
-            if id[j][i] == 0 and not(flag):
-                if pixel == color_black:
-                    
-                    id[j][i] = Edge.Edge(tuple(np.random.choice(range(256), size=3)))
-                    #id[j][i] = Edge.Edge(pixel)
-                    Edges.append(id[j][i])
+                if n%4==1:
+                    neighbors = [[j - 1,i + 1],[j - 1,i],[j - 1,i - 1],[j,i + 1],[j,i - 1],[j + 1,i + 1],[j + 1,i],[j + 1,i - 1]]
+
+                elif n%4==2:
+                    neighbors = [[j + 1,i + 1],[j + 1,i],[j + 1,i - 1],[j,i + 1],[j,i - 1],[j - 1,i + 1],[j - 1,i],[j - 1,i - 1]]
+
+                elif n%4==3:
+                    neighbors = [[j + 1,i - 1],[j + 1,i],[j + 1,i + 1],[j,i - 1],[j,i + 1],[j - 1,i - 1],[j - 1,i],[j - 1,i + 1]]
+
                 else:
+                    neighbors = [[j - 1,i - 1],[j - 1,i],[j - 1,i + 1],[j,i - 1],[j,i + 1],[j + 1,i - 1],[j + 1,i],[j + 1,i + 1]]
 
-                    id[j][i] = Vertex.Vertex(tuple(np.random.choice(range(256), size=3)))
-                    #id[j][i] = Vertex.Vertex(pixel)
-                    Vertices.append(id[j][i])
-            
-            #add the pixels coordinates to the Edge/Vertex object
-            id[j][i].add(i,j)
+                #center pixel tries to copy the object of the neighboor pixel
+                for x,y in neighbors:
+                    if (id[j][i] == 0 or n>0) and not(flag):
+                        if (pixel == im.getpixel((y, x))) and not(id[x][y]==0):
+                            if  not(id[j][i]==0):
+                                id[j][i].remove(i,j)
+                            id[j][i] = id[x][y]
+                            flag = True
+                
+                #If the pixel has found no neighboor whose object it can copy it will create its own object.
+                if id[j][i] == 0 and not(flag):
+                    if pixel == color_black:
+                        
+                        id[j][i] = Edge.Edge(tuple(np.random.choice(range(256), size=3)))
+                        #id[j][i] = Edge.Edge(pixel)
+                        Edges.append(id[j][i])
+                    else:
 
-            #Give neighbors the center pixels object
-            for x,y in neighbors:
+                        id[j][i] = Vertex.Vertex(tuple(np.random.choice(range(256), size=3)))
+                        #id[j][i] = Vertex.Vertex(pixel)
+                        Vertices.append(id[j][i])
+                
+                #add the pixels coordinates to the Edge/Vertex object
+                id[j][i].add(i,j)
 
-                if pixel == im.getpixel((y, x)):
-                    if not(id[x][y]==0):
-                        id[x][y].remove(y, x)
-                    id[x][y] = id[j][i]
-                    id[x][y].add(y, x)
+                #Give neighbors the center pixels object
+                """if n==0:
+                    for x,y in neighbors:
+                        if pixel == im.getpixel((y, x)):
+                            if not(id[x][y]==0):
+                                id[x][y].remove(y, x)
+                            id[x][y] = id[j][i]
+                            id[x][y].add(y, x)"""
+
+    if n%4==1:
+        flip_j(True)
+
+    elif n%4==2:
+        flip_i(False)
+
+    elif n%4==3:
+        flip_j(False)
+
+    else:
+        flip_i(True)
+    
+    file_name = str(n)
+
+    #draw image
+    image = Image.new("RGB", im.size, (255, 255, 255))
+
+    for vertex in Vertices:
+        pixels = vertex.pixel_coordinates
+        for pixel in pixels:
+            image.putpixel(pixel, vertex.color)
+
+    for edge in Edges:
+        pixels = edge.pixel_coordinates
+        for pixel in pixels:
+            image.putpixel(pixel, edge.color)
+
+    image.save(folder_path + file_name + ".png")
 
 
-
-  
-#draw image
-image = Image.new("RGB", im.size, (255, 255, 255))
-
-for vertex in Vertices:
-    pixels = vertex.pixel_coordinates
-    for pixel in pixels:
-        image.putpixel(pixel, vertex.color)
-
-for edge in Edges:
-    pixels = edge.pixel_coordinates
-    for pixel in pixels:
-        image.putpixel(pixel, edge.color)
-
-image.save(file_name + ".png")
 
 #make Edge and Vertex lists
 polished_Edges = []
@@ -106,3 +147,5 @@ for vertex in Vertices:
 
 print(len(polished_Edges))
 print(len(polished_Vertices))
+
+make_gif("iteration images")
