@@ -1,8 +1,24 @@
 Todo:
 
-Simplify the code using loops
-Impelement multiple directions for passes to make it faster
-Make sure it works
-Once the image is fully parsed, extract the graph structure as adjancency list
+Make the algorithm loop until it didn't make any change instead of a fixed size
+ (l.52 : "for n in range(0,8):")
+--> Can count how many pixels change states and display it at every iteration to give an idea of how close we are to convergence
 
-Draw the extract graph (either use GraphViz to draw it from scratch, or use the base image as reference to place the vertices).
+Fix convergence for testing 
+#center pixel tries to copy the object of the neighboor pixel
+-> pick the minimum between two colors
+
+
+Testing if the resulting graph is correct :
+- Install https://github.com/ciaranm/glasgow-subgraph-solver/tree/master
+- create the .lad files to represent the two graphs (the expected solution + the one you extracted)
+- Use subprocess to call the executable from python
+- test if solution is subgraph of result (+ other direction)
+- if true for both cases, algorithm is correct !
+
+
+
+A few more medium-size exemples
+
+Optional (?) : Try to make very bad images for the algorithm
+I think maybe a spiral could take a lot of iterations to get through ?
