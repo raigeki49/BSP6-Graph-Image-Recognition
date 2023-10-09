@@ -16,9 +16,12 @@ Testing if the resulting graph is correct :
 - test if solution is subgraph of result (+ other direction)
 - if true for both cases, algorithm is correct !
 
-
-
-A few more medium-size exemples
-
+Make 2-3 small examples that could be bad (spiral + ???) 
 Optional (?) : Try to make very bad images for the algorithm
 I think maybe a spiral could take a lot of iterations to get through ?
+
+
+Implement dectecting what is a vertex/edge based on the fact that edges can only be connected to 2 objects.
+
+Think about how to detect circles manually (if time permits)
+
