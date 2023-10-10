@@ -4,6 +4,8 @@ class Object:
         self.color = color
         self.type = 0
         self.Connections = set()
+        self.index = 0
+        self.Verticies = set()
 
     def compare(self, other):
         if self.color < other.color:
@@ -21,12 +23,23 @@ class Object:
         return len(self.pixel_coordinates)
     
     def __str__(self):
-        if self.type == 0:
+        """if self.type == 0:
             return f"Object" + self.index
         elif self.type == 1:
             return f"Vertex" + self.index
         else:
-            return f"Edge" + self.index
-    
+            return f"Edge" + self.index"""
+        return str(self.index)
+
     def addConnection(self, object):
         self.Connections.add(object)
+
+    def addVertex(self, vertex):
+        self.Verticies.add(vertex)
+
+    def getVerticies(self):
+        string = str(self.index) + " : {"
+        for vertex in self.Verticies:
+            string += str(vertex) +", "
+        return string[:-2] + "}"
+        

@@ -4,9 +4,9 @@ from PIL import Image
 import numpy as np
 import Object
 
-image_path = "goodGraphs/graph3.png"
-
-folder_path ="iteration images/"
+image_path = "randomGraph50_80_bubbles.png"
+folder_path = "newGood/"
+iterations_folder_path ="iteration images/"
 #colors in the image graph1
 color_white = (255, 255, 255)
 color_black = (0, 0, 0)
@@ -14,7 +14,7 @@ color_red = (237, 28, 36)
 color_green = (34, 177, 76)
 
 #load in graph image
-im = Image.open(image_path)
+im = Image.open(folder_path + image_path)
 im = im.convert('RGB')
 
 #create list to store objects in
@@ -137,7 +137,7 @@ while (iterations == 0 or pixel_changed > 0) and iterations <= 20:
             for pixel in pixels:
                 image.putpixel(pixel, object.color)
 
-        image.save(folder_path + iteration + ".png")
+        image.save(iterations_folder_path + iteration + ".png")
     print("Iteration:" + iteration)
     iterations +=1
     print("pixel changed:" + str(pixel_changed) + "\n")
@@ -166,7 +166,6 @@ for object in polished_Objects:
                 object.addConnection(id[y][x])
 
 Objects = polished_Objects.copy()
-
 for object in Objects:
     if len(object.Connections) == 1 or len(object.Connections) > 2:
         Vertices.append(object)
@@ -175,26 +174,59 @@ for object in Objects:
 
 Objects = polished_Objects.copy()
 flag = False
-for object in Objects:
-    flag = False
-    for pixel in object.pixel_coordinates:
-        i,j = pixel
-        neighbors = [[j - 1,i - 1],[j - 1,i],[j - 1,i + 1],[j,i - 1],[j,i + 1],[j + 1,i - 1],[j + 1,i],[j + 1,i + 1]]
-        for y,x in neighbors:
-            if not(id[y][x]==0) and id[y][x].type==1 and not(flag):
-                Edges.append(object)
-                object.type = 2
-                polished_Objects.remove(object)
-                flag = True
+while len(polished_Objects)>0: #Loop needed since if an edge has a connection to two verticies that have two connections. None of the verticies will be identified which results in the edge not being able to be identified as an edge. So the edge became a vertex.
+    for object in Objects:
+        flag = False
+        for pixel in object.pixel_coordinates:
+            i,j = pixel
+            neighbors = [[j - 1,i - 1],[j - 1,i],[j - 1,i + 1],[j,i - 1],[j,i + 1],[j + 1,i - 1],[j + 1,i],[j + 1,i + 1]]
+            for y,x in neighbors:
+                if not(id[y][x]==0) and id[y][x].type==1 and not(flag):
+                    Edges.append(object)
+                    object.type = 2
+                    polished_Objects.remove(object)
+                    flag = True
 
-Objects = polished_Objects.copy()
+    Objects = polished_Objects.copy()
 
-for object in Objects:
-    Vertices.append(object)
-    object.type = 1
-    polished_Objects.remove(object)
+    for object in Objects:
+        flag = False
+        for pixel in object.pixel_coordinates:
+            i,j = pixel
+            neighbors = [[j - 1,i - 1],[j - 1,i],[j - 1,i + 1],[j,i - 1],[j,i + 1],[j + 1,i - 1],[j + 1,i],[j + 1,i + 1]]
+            for y,x in neighbors:
+                if not(id[y][x]==0) and id[y][x].type==2 and not(flag):
+                    Vertices.append(object)
+                    object.type = 1
+                    polished_Objects.remove(object)
+                    flag = True
+    Objects = polished_Objects.copy()
 
-G =[]
+""" for object in Objects:
+        Vertices.append(object)
+        object.type = 1
+        polished_Objects.remove(object)"""
+
+
+for edge in Edges:
+    v1 = edge.Connections.pop()
+    v2 = edge.Connections.pop()
+    v1.addVertex(v2)
+    v2.addVertex(v1)
+
+"""print("third last")
+print(Vertices[-3])
+print(Vertices[-3].Connections.pop())
+print(Vertices[-3].Connections.pop())
+print("second last")
+print(Vertices[-2])
+print(Vertices[-2].Connections.pop())
+print(Vertices[-2].Connections.pop())
+print("last")
+print(Vertices[-1])
+print(Vertices[-1].Connections.pop())
+print(Vertices[-1].Connections.pop())"""
+"""G =[]
 for edge in Edges:
     G.append(edge.Connections)
 
@@ -204,15 +236,23 @@ def render_digraph(G): #https://gist.github.com/sidharthkuruvila/f59b38215316c0c
             yield  '{},{}'.format(p, c)
 
     lines = "\n".join(g())
-    return """{}""".format(lines)
+    #return {}.format(lines) #missing 3 gänsefuschen before and after {}
 
 with open("graph.csv", "w") as fo:
   fo.write(render_digraph(G))
+"""
+string = ""
+
+with open("graph.png.struct", "w") as fo:
+    for v in Vertices:
+        string += v.getVerticies()
+        string +=",\n"
+    fo.write(string[:-2])
 
 print("\ncompare Expected and Extracted: \n")
-result = subprocess.run(["glasgow-subgraph-solver/build/glasgow_subgraph_solver --induced --format csv graph.csv graph2.csv"], shell=True, text=True)
+result = subprocess.run(["glasgow-subgraph-solver/build/glasgow_subgraph_solver --induced graph.png.struct "+ image_path +".struct"], shell=True, text=True)
 print(result.stdout)
 
 print("\ncompare Extracted and Expected: \n")
-result = subprocess.run(["glasgow-subgraph-solver/build/glasgow_subgraph_solver --induced --format csv graph.csv graph2.csv"], shell=True, text=True)
+result = subprocess.run(["glasgow-subgraph-solver/build/glasgow_subgraph_solver --induced "+ image_path +".struct graph.png.struct"], shell=True, text=True)
 print(result.stdout)
