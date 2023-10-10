@@ -4,8 +4,8 @@ from PIL import Image
 import numpy as np
 import Object
 
-image_path = "randomGraph50_80_bubbles.png"
-folder_path = "newGood/"
+image_path = "weirdGraph2.png"
+folder_path = "goodGraphs/"
 iterations_folder_path ="iteration images/"
 #colors in the image graph1
 color_white = (255, 255, 255)
@@ -53,7 +53,7 @@ def make_gif(frame_folder):
 iterations = 0
 pixel_changed = 0
 
-while (iterations == 0 or pixel_changed > 0) and iterations <= 20:
+while (iterations == 0 or pixel_changed > 0) and iterations <= 200:
     pixel_changed = 0
 
     for j in range_j:
