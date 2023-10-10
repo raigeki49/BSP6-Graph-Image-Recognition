@@ -80,12 +80,15 @@ while (iterations == 0 or pixel_changed > 0) and iterations <= 20:
                 for x,y in neighbors:
                     if (id[j][i] == 0 or iterations>0) and not(flag):
                         if (pixel == im.getpixel((y, x))) and not(id[x][y]==0):
-                            if  not(id[j][i]==0):
-                                id[j][i].remove(i,j)
-                            if not(id[x][y]==id[j][i]):
-                                pixel_changed += 1
-                            id[j][i] = id[x][y]
-                            flag = True
+
+                            if id[j][i] == 0 or id[j][i].compare(id[x][y]):
+                                if not(id[j][i]==id[x][y]):
+                                    if not(id[j][i]==0):
+                                        id[j][i].remove(i,j)
+                                    pixel_changed += 1
+                                    id[j][i] = id[x][y]
+                                    flag = True
+
                 
                 #If the pixel has found no neighboor whose object it can copy it will create its own object.
                 if id[j][i] == 0 and not(flag):

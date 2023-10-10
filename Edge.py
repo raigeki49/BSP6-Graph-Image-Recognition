@@ -5,6 +5,12 @@ class Edge:
         self.Verticies = set()
         self.full = False
 
+    def compare(self, other):
+        if self.color < other.color:
+            return False
+        else:
+            return True
+        
     def add(self,x,y):
         self.pixel_coordinates.add((x,y)) 
 
