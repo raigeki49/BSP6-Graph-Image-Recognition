@@ -193,7 +193,7 @@ def render_digraph(G):
     
     lines = lines + "\n".join(f())
     return """
-    digraph {{
+     {{
     {}
     }}
     """.format(lines)

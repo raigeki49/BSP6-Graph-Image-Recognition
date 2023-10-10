@@ -17,3 +17,6 @@ class Vertex:
 
     def get_size(self):
         return len(self.pixel_coordinates)
+    
+    def __str__(self):
+        return f"Vertex" + self.index
