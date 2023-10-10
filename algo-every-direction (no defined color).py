@@ -4,8 +4,8 @@ from PIL import Image
 import numpy as np
 import Object
 
-image_path = "weirdGraph2.png"
-folder_path = "goodGraphs/"
+image_path = "randomGraph300_500.png"
+folder_path = "newGood/"
 iterations_folder_path ="iteration images/"
 #colors in the image graph1
 color_white = (255, 255, 255)
@@ -148,6 +148,7 @@ make_gif("iteration images")
 polished_Objects = []
 count = 0
 #clean Bbjects list
+print("clean object list")
 for object in Objects:
        if not(object.get_size() == 0):
               count += 1
@@ -156,6 +157,7 @@ for object in Objects:
 
 Objects = polished_Objects.copy()
 
+print("find connections")
 neighbors = [[j - 1,i - 1],[j - 1,i],[j - 1,i + 1],[j,i - 1],[j,i + 1],[j + 1,i - 1],[j + 1,i],[j + 1,i + 1]]
 for object in polished_Objects:
     for pixel in object.pixel_coordinates:
@@ -165,6 +167,13 @@ for object in polished_Objects:
             if not(id[y][x]==object) and not(id[y][x]==0):
                 object.addConnection(id[y][x])
 
+print("remove object with no connections")#had to add cause graph has a vertex with no edges
+for object in Objects:
+    if len(object.Connections) == 0:
+        polished_Objects.remove(object)
+Objects = polished_Objects.copy()
+
+print("find verticies with 1 or more than 2 connections")
 Objects = polished_Objects.copy()
 for object in Objects:
     if len(object.Connections) == 1 or len(object.Connections) > 2:
@@ -174,7 +183,9 @@ for object in Objects:
 
 Objects = polished_Objects.copy()
 flag = False
+print("identify object that have 2 connections")
 while len(polished_Objects)>0: #Loop needed since if an edge has a connection to two verticies that have two connections. None of the verticies will be identified which results in the edge not being able to be identified as an edge. So the edge became a vertex.
+    #print("identify edges with 2 connections")
     for object in Objects:
         flag = False
         for pixel in object.pixel_coordinates:
@@ -188,7 +199,7 @@ while len(polished_Objects)>0: #Loop needed since if an edge has a connection to
                     flag = True
 
     Objects = polished_Objects.copy()
-
+    #print("identify verticies with 2 connections")
     for object in Objects:
         flag = False
         for pixel in object.pixel_coordinates:
@@ -201,19 +212,22 @@ while len(polished_Objects)>0: #Loop needed since if an edge has a connection to
                     polished_Objects.remove(object)
                     flag = True
     Objects = polished_Objects.copy()
+    print(polished_Objects)
 
 """ for object in Objects:
         Vertices.append(object)
         object.type = 1
         polished_Objects.remove(object)"""
 
-
+print("connect verticies")
 for edge in Edges:
     v1 = edge.Connections.pop()
     v2 = edge.Connections.pop()
     v1.addVertex(v2)
     v2.addVertex(v1)
 
+print(len(Vertices))
+print(len(Edges))
 """print("third last")
 print(Vertices[-3])
 print(Vertices[-3].Connections.pop())
