@@ -1,27 +1,13 @@
 Todo:
 
-Make the algorithm loop until it didn't make any change instead of a fixed size
- (l.52 : "for n in range(0,8):")
---> Can count how many pixels change states and display it at every iteration to give an idea of how close we are to convergence
+Parse .struct to get a proper .csv format
+every edge (x,y) is given as one line 
+x,y
+to call glasgow
 
-Fix convergence for testing 
-#center pixel tries to copy the object of the neighboor pixel
--> pick the minimum between two colors
+- Detect circles (check picture 1)
+(Optional)
+Checking points within a circle, maybe based on this
+https://en.wikipedia.org/wiki/Midpoint_circle_algorithm
 
-
-Testing if the resulting graph is correct :
-- Install https://github.com/ciaranm/glasgow-subgraph-solver/tree/master
-- create the .lad files to represent the two graphs (the expected solution + the one you extracted)
-- Use subprocess to call the executable from python
-- test if solution is subgraph of result (+ other direction)
-- if true for both cases, algorithm is correct !
-
-Make 2-3 small examples that could be bad (spiral + ???) 
-Optional (?) : Try to make very bad images for the algorithm
-I think maybe a spiral could take a lot of iterations to get through ?
-
-
-Implement dectecting what is a vertex/edge based on the fact that edges can only be connected to 2 objects.
-
-Think about how to detect circles manually (if time permits)
-
+- Solve edge conflicts (edge-splitting) (picture 2)
