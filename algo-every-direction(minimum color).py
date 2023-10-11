@@ -1,10 +1,11 @@
 import glob
+import subprocess
 from PIL import Image, ImageDraw
 import numpy as np
 import Vertex, Edge
 import os
 
-image_path = "goodGraphs/graph3.png"
+image_path = "goodGraphs/graph1.png"
 
 folder_path ="iteration images/"
 #colors in the image graph1
@@ -80,12 +81,15 @@ while (iterations == 0 or pixel_changed > 0) and iterations <= 20:
                 for x,y in neighbors:
                     if (id[j][i] == 0 or iterations>0) and not(flag):
                         if (pixel == im.getpixel((y, x))) and not(id[x][y]==0):
-                            if  not(id[j][i]==0):
-                                id[j][i].remove(i,j)
-                            if not(id[x][y]==id[j][i]):
-                                pixel_changed += 1
-                            id[j][i] = id[x][y]
-                            flag = True
+
+                            if id[j][i] == 0 or id[j][i].compare(id[x][y]):
+                                if not(id[j][i]==id[x][y]):
+                                    if not(id[j][i]==0):
+                                        id[j][i].remove(i,j)
+                                    pixel_changed += 1
+                                    id[j][i] = id[x][y]
+                                    flag = True
+
                 
                 #If the pixel has found no neighboor whose object it can copy it will create its own object.
                 if id[j][i] == 0 and not(flag):
@@ -151,12 +155,18 @@ while (iterations == 0 or pixel_changed > 0) and iterations <= 20:
 #make Edge and Vertex lists
 polished_Edges = []
 polished_Vertices = []
+count = 0
 for edge in Edges:
        if not(edge.get_size() == 0):
+              count += 1
+              edge.index = str(count)
               polished_Edges.append(edge)
 
+count = 0
 for vertex in Vertices:
        if not(vertex.get_size() == 0):
+              count += 1
+              vertex.index = str(count)
               polished_Vertices.append(vertex)
 
 #print(len(polished_Edges))
@@ -180,23 +190,21 @@ G =[]
 for edge in polished_Edges:
     G.append(edge.Verticies)
 
-def render_digraph(G):
+def render_digraph(G): #https://gist.github.com/sidharthkuruvila/f59b38215316c0cf6f7d18d21347e504
     def g():
         for p, c in G:
-            yield  '"{}" -> "{}"'.format(p, c)
+            yield  '{},{}'.format(p, c)
 
     lines = "\n".join(g())
+    return """{}""".format(lines)
 
-    def f():
-        for p, c in G:
-            yield  '"{}" -> "{}"'.format(c, p)
-    
-    lines = lines + "\n".join(f())
-    return """
-     {{
-    {}
-    }}
-    """.format(lines)
-
-with open("graph.dot", "w") as fo:
+with open("graph.csv", "w") as fo:
   fo.write(render_digraph(G))
+
+print("\ncompare Expected and Extracted: \n")
+result = subprocess.run(["glasgow-subgraph-solver/build/glasgow_subgraph_solver --induced --format csv graph.csv graph2.csv"], shell=True, text=True)
+print(result.stdout)
+
+print("\ncompare Extracted and Expected: \n")
+result = subprocess.run(["glasgow-subgraph-solver/build/glasgow_subgraph_solver --induced --format csv graph.csv graph2.csv"], shell=True, text=True)
+print(result.stdout)

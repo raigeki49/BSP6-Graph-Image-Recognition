@@ -4,7 +4,7 @@ import numpy as np
 import Vertex, Edge
 import os
 
-image_path = "goodGraphs/graph3.png"
+image_path = "goodGraphs/graph1.png"
 
 folder_path ="iteration images/"
 #colors in the image graph1
@@ -49,12 +49,7 @@ def make_gif(frame_folder):
                save_all=True, duration=300, loop=0)
 
 #Identify the pixel
-iterations = 0
-pixel_changed = 0
-
-while (iterations == 0 or pixel_changed > 0) and iterations <= 20:
-    pixel_changed = 0
-
+for n in range(0,8):
     for j in range_j:
         for i in range_i:
             pixel = im.getpixel((i,j))
@@ -64,13 +59,13 @@ while (iterations == 0 or pixel_changed > 0) and iterations <= 20:
                 flag = False
 
                 #define in what order the neighbors should be checked
-                if iterations%4==1:
+                if n%4==1:
                     neighbors = [[j - 1,i + 1],[j - 1,i],[j - 1,i - 1],[j,i + 1],[j,i - 1],[j + 1,i + 1],[j + 1,i],[j + 1,i - 1]]
 
-                elif iterations%4==2:
+                elif n%4==2:
                     neighbors = [[j + 1,i + 1],[j + 1,i],[j + 1,i - 1],[j,i + 1],[j,i - 1],[j - 1,i + 1],[j - 1,i],[j - 1,i - 1]]
 
-                elif iterations%4==3:
+                elif n%4==3:
                     neighbors = [[j + 1,i - 1],[j + 1,i],[j + 1,i + 1],[j,i - 1],[j,i + 1],[j - 1,i - 1],[j - 1,i],[j - 1,i + 1]]
 
                 else:
@@ -78,12 +73,10 @@ while (iterations == 0 or pixel_changed > 0) and iterations <= 20:
 
                 #center pixel tries to copy the object of the neighboor pixel
                 for x,y in neighbors:
-                    if (id[j][i] == 0 or iterations>0) and not(flag):
+                    if (id[j][i] == 0 or n>0) and not(flag):
                         if (pixel == im.getpixel((y, x))) and not(id[x][y]==0):
                             if  not(id[j][i]==0):
                                 id[j][i].remove(i,j)
-                            if not(id[x][y]==id[j][i]):
-                                pixel_changed += 1
                             id[j][i] = id[x][y]
                             flag = True
                 
@@ -92,13 +85,13 @@ while (iterations == 0 or pixel_changed > 0) and iterations <= 20:
                     if pixel == color_black:
                         
                         id[j][i] = Edge.Edge(tuple(np.random.choice(range(256), size=3)))
+                        #id[j][i] = Edge.Edge(pixel)
                         Edges.append(id[j][i])
-                        pixel_changed += 1
                     else:
 
                         id[j][i] = Vertex.Vertex(tuple(np.random.choice(range(256), size=3)))
+                        #id[j][i] = Vertex.Vertex(pixel)
                         Vertices.append(id[j][i])
-                        pixel_changed += 1
                 
                 #add the pixels coordinates to the Edge/Vertex object
                 id[j][i].add(i,j)
@@ -113,38 +106,34 @@ while (iterations == 0 or pixel_changed > 0) and iterations <= 20:
                             id[x][y].add(y, x)"""
 
     #change the direction with which we iterate through the pixels
-    if iterations%4==1:
+    if n%4==1:
         flip_j(True)
 
-    elif iterations%4==2:
+    elif n%4==2:
         flip_i(False)
 
-    elif iterations%4==3:
+    elif n%4==3:
         flip_j(False)
 
     else:
         flip_i(True)
     
-    iteration = str(iterations)
-    if not(pixel_changed==0):
+    file_name = str(n)
 
-        #draw image
-        image = Image.new("RGB", im.size, (255, 255, 255))
+    #draw image
+    image = Image.new("RGB", im.size, (255, 255, 255))
 
-        for vertex in Vertices:
-            pixels = vertex.pixel_coordinates
-            for pixel in pixels:
-                image.putpixel(pixel, vertex.color)
+    for vertex in Vertices:
+        pixels = vertex.pixel_coordinates
+        for pixel in pixels:
+            image.putpixel(pixel, vertex.color)
 
-        for edge in Edges:
-            pixels = edge.pixel_coordinates
-            for pixel in pixels:
-                image.putpixel(pixel, edge.color)
+    for edge in Edges:
+        pixels = edge.pixel_coordinates
+        for pixel in pixels:
+            image.putpixel(pixel, edge.color)
 
-        image.save(folder_path + iteration + ".png")
-    print("Iteration:" + iteration)
-    iterations +=1
-    print("pixel changed:" + str(pixel_changed) + "\n")
+    image.save(folder_path + file_name + ".png")
 
 
 
@@ -193,7 +182,7 @@ def render_digraph(G):
     
     lines = lines + "\n".join(f())
     return """
-     {{
+    digraph {{
     {}
     }}
     """.format(lines)
