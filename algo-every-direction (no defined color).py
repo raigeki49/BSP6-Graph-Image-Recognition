@@ -166,17 +166,17 @@ for object in polished_Objects:
         for y,x in neighbors:
             if not(id[y][x]==object) and not(id[y][x]==0):
                 object.addConnection(id[y][x])
-
+"""
 print("remove object with no connections")#had to add cause graph has a vertex with no edges
 for object in Objects:
     if len(object.Connections) == 0:
         polished_Objects.remove(object)
-Objects = polished_Objects.copy()
+Objects = polished_Objects.copy()"""
 
 print("find verticies with 1 or more than 2 connections")
 Objects = polished_Objects.copy()
 for object in Objects:
-    if len(object.Connections) == 1 or len(object.Connections) > 2:
+    if len(object.Connections) < 2 or len(object.Connections) > 2:
         Vertices.append(object)
         object.type = 1
         polished_Objects.remove(object)

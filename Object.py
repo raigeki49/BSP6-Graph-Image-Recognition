@@ -38,8 +38,11 @@ class Object:
         self.Verticies.add(vertex)
 
     def getVerticies(self):
-        string = str(self.index) + " : {"
-        for vertex in self.Verticies:
-            string += str(vertex) +", "
-        return string[:-2] + "}"
+        if len(self.Verticies)==0:
+            return str(self.index) + " : { }"
+        else:
+            string = str(self.index) + " : {"
+            for vertex in self.Verticies:
+                string += str(vertex) +", "
+            return string[:-2] + "}"
         
