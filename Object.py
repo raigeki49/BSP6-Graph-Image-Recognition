@@ -66,4 +66,11 @@ class Object:
                 min_y=coor[1]
             
         return [min_x, max_x, min_y, max_y]
+    
+    def getCenter(self):
+        dimensions = self.getDimensions()
+        center_x = (dimensions[1] + dimensions[0])/2
+        center_y = (dimensions[3] + dimensions[2])/2
+
+        return [center_x, center_y]
         

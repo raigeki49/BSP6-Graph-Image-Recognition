@@ -6,7 +6,7 @@ import Object
 import re
 import numpy as np
 
-image_path = "randomGraph100_150.png"
+image_path = "randomGraph300_500.png"
 folder_path = "newGood/"
 iterations_folder_path ="iteration images/"
 #colors in the image graph1
@@ -171,8 +171,6 @@ for object in Objects:
         Edges.append(object)
 
 e2 = 0.15
-print(len(Objects))
-print(len(Edges))
 for object in potential_Circle:
     dimensions = object.getDimensions()
     area = (dimensions[1] - dimensions[0]) * (dimensions[3] - dimensions[2])
@@ -184,8 +182,7 @@ for object in potential_Circle:
         Edges.append(object)
 
 
-print(len(Vertices))
-print(len(Edges))
+
 
 print("find connections")
 neighbors = [[j - 1,i - 1],[j - 1,i],[j - 1,i + 1],[j,i - 1],[j,i + 1],[j + 1,i - 1],[j + 1,i],[j + 1,i + 1]]
@@ -196,6 +193,44 @@ for edge in Edges:
         for y,x in neighbors:
             if id[y][x] in Vertices:
                 edge.addConnection(id[y][x])
+
+#edge splitting
+wrong_Edges = []
+for edge in Edges:
+    if len(edge.Connections)>2:
+        wrong_Edges.append(edge)
+        Edges.remove(edge)
+
+for edge in wrong_Edges:
+    edge_verticies = edge.Connections
+    print("start")
+    print(len(edge_verticies))
+    remaining_verticies = edge_verticies.copy()
+    for v1 in edge_verticies:
+        remaining_verticies.remove(v1)
+        print(remaining_verticies)
+        for v2 in remaining_verticies:
+            flag = 0
+            print(v2)
+            v1_center = v1.getCenter()
+            v2_center = v2.getCenter()
+            edge_center = [int((v2_center[0] + v1_center[0])/2), int((v2_center[1] + v1_center[1])/2)]
+            neighbors = [[edge_center[1] - 1,edge_center[0] - 1],[edge_center[1] - 1,edge_center[0]],[edge_center[1] - 1,edge_center[0] + 1],[edge_center[1],edge_center[0] - 1],[edge_center[1],edge_center[0] + 1],[edge_center[1] + 1,edge_center[0] - 1],[edge_center[1] + 1,edge_center[0]],[edge_center[1] + 1,edge_center[0] + 1],[edge_center[1],edge_center[0]]]
+            for y,x in neighbors:
+                if not(id[y][x] == edge):
+                    flag += 1
+            if(flag >=3):
+                continue
+            else:
+                print("hi")
+                object = Object.Object((255,255,255))
+                object.addConnection(v1)
+                object.addConnection(v2)
+                Edges.append(object)
+
+
+print(len(Vertices))
+print(len(Edges))
 
 G =[]
 for edge in Edges:
