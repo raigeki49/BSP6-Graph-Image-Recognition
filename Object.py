@@ -1,3 +1,4 @@
+import numpy as np
 class Object:
     def __init__(self, color) -> None:
         self.pixel_coordinates = set()
@@ -45,4 +46,24 @@ class Object:
             for vertex in self.Verticies:
                 string += str(vertex) +", "
             return string[:-2] + "}"
+        
+    def getDimensions(self):
+        min_y = np.inf
+        max_y = 0
+        min_x = np.inf
+        max_x = 0
+        for coor in self.pixel_coordinates:
+            if coor[0]>max_x:
+                max_x=coor[0]
+
+            if coor[0]<min_x:
+                min_x=coor[0]
+
+            if coor[1]>max_y:
+                max_y=coor[1]
+
+            if coor[1]<min_y:
+                min_y=coor[1]
+            
+        return [min_x, max_x, min_y, max_y]
         
