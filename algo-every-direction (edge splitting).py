@@ -6,7 +6,7 @@ import Object
 import re
 import numpy as np
 
-image_path = "randomGraph300_500.png"
+image_path = "randomGraph100_150.png"
 folder_path = "newGood/"
 iterations_folder_path ="iteration images/"
 #colors in the image graph1
@@ -203,15 +203,11 @@ for edge in Edges:
 
 for edge in wrong_Edges:
     edge_verticies = edge.Connections
-    print("start")
-    print(len(edge_verticies))
     remaining_verticies = edge_verticies.copy()
     for v1 in edge_verticies:
         remaining_verticies.remove(v1)
-        print(remaining_verticies)
         for v2 in remaining_verticies:
             flag = 0
-            print(v2)
             v1_center = v1.getCenter()
             v2_center = v2.getCenter()
             edge_center = [int((v2_center[0] + v1_center[0])/2), int((v2_center[1] + v1_center[1])/2)]
@@ -222,7 +218,6 @@ for edge in wrong_Edges:
             if(flag >=3):
                 continue
             else:
-                print("hi")
                 object = Object.Object((255,255,255))
                 object.addConnection(v1)
                 object.addConnection(v2)
