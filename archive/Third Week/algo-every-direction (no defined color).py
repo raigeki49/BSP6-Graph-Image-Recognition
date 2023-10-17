@@ -3,10 +3,9 @@ import subprocess
 from PIL import Image
 import numpy as np
 import Object
-import re
 
-image_path = "randomGraph300_500_rainbow.png"
-folder_path = "newGood/"
+image_path = "weirdGraph1.png"
+folder_path = "goodGraphs/"
 iterations_folder_path ="iteration images/"
 #colors in the image graph1
 color_white = (255, 255, 255)
@@ -218,7 +217,7 @@ while len(polished_Objects)>0: #Loop needed since if an edge has a connection to
         Vertices.append(object)
         object.type = 1
         polished_Objects.remove(object)"""
-"""
+
 print("connect verticies")
 for edge in Edges:
     v1 = edge.Connections.pop()
@@ -228,7 +227,7 @@ for edge in Edges:
 
 print(len(Vertices))
 print(len(Edges))
-print("third last")
+"""print("third last")
 print(Vertices[-3])
 print(Vertices[-3].Connections.pop())
 print(Vertices[-3].Connections.pop())
@@ -240,7 +239,7 @@ print("last")
 print(Vertices[-1])
 print(Vertices[-1].Connections.pop())
 print(Vertices[-1].Connections.pop())"""
-G =[]
+"""G =[]
 for edge in Edges:
     G.append(edge.Connections)
 
@@ -250,35 +249,23 @@ def render_digraph(G): #https://gist.github.com/sidharthkuruvila/f59b38215316c0c
             yield  '{},{}'.format(p, c)
 
     lines = "\n".join(g())
-    return """{}""".format(lines) #missing 3 gänsefuschen before and after {}
+    #return {}.format(lines) #missing 3 gänsefuschen before and after {}
 
 with open("graph.csv", "w") as fo:
   fo.write(render_digraph(G))
+"""
+string = ""
 
-string=""
-
-with open(folder_path + image_path + ".struct", "r") as f:
-    for line in f:
-        vertecies = re.findall(r"\d+", line)
-        vertex = vertecies[0]
-        for v in vertecies[1:]:
-            string += vertex + "," + v + "\n"
-
-with open(image_path + ".csv", "w") as fu:
-    fu.write(string)
+with open("graph.png.struct", "w") as fo:
+    for v in Vertices:
+        string += v.getVerticies()
+        string +=",\n"
+    fo.write(string[:-2])
 
 print("\ncompare Expected and Extracted: \n")
-result = subprocess.run(["glasgow-subgraph-solver/build/glasgow_subgraph_solver --format csv --induced graph.csv "+ image_path +".csv"], shell=True, text=True, stdout = subprocess.PIPE)
-
-lines = result.stdout.splitlines()
-for line in lines:
-    if line.startswith("status"):
-        print(line)
+result = subprocess.run(["glasgow-subgraph-solver/build/glasgow_subgraph_solver --induced graph.png.struct "+ image_path +".struct"], shell=True, text=True)
+print(result.stdout)
 
 print("\ncompare Extracted and Expected: \n")
-result = subprocess.run(["glasgow-subgraph-solver/build/glasgow_subgraph_solver --format csv --induced "+ image_path +".csv graph.csv"], shell=True, text=True, stdout = subprocess.PIPE)
-
-lines = result.stdout.splitlines()
-for line in lines:
-    if line.startswith("status"):
-        print(line)
+result = subprocess.run(["glasgow-subgraph-solver/build/glasgow_subgraph_solver --induced "+ image_path +".struct graph.png.struct"], shell=True, text=True)
+print(result.stdout)
