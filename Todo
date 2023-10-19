@@ -1,0 +1,14 @@
+Make a function that returns a list containing all the neighbors of a pixel (just for a cleaner code since it's used several times)
+
+
+Important: Do not call your class Object or use object as a variable name, it has a special role in python (base class of everything)
+
+
+Preliminary report:
+1) Project Description 
+2) Explain that we focus on simple graphs, doing a home-made algorithm 
+3) Two steps : identifying objects then identifying structure
+4) Explain algorithm to identify objects
+5) Explain algorithm to extract structure assuming we know what is an edge/vertex (= knowing pixel color)
+6) Explain algorithm to identify vertex/edges (detecting circles and edge-splitting)
+7) (Maybe not yet ? unless need a more stuff to write) Explain how we verify if the result is correct
