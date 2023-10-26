@@ -50,7 +50,7 @@ def make_gif(frame_folder):
     frame_one = frames[0]
     frame_one.save("iterations.gif", format="GIF", append_images=frames,
                save_all=True, duration=300, loop=0)
-
+    
 #Identify the pixel
 iterations = 0
 pixel_changed = 0
@@ -189,7 +189,6 @@ neighbors = [[j - 1,i - 1],[j - 1,i],[j - 1,i + 1],[j,i - 1],[j,i + 1],[j + 1,i 
 for edge in Edges:
     for pixel in edge.pixel_coordinates:
         i,j = pixel
-        neighbors = [[j - 1,i - 1],[j - 1,i],[j - 1,i + 1],[j,i - 1],[j,i + 1],[j + 1,i - 1],[j + 1,i],[j + 1,i + 1]]
         for y,x in neighbors:
             if id[y][x] in Vertices:
                 edge.addConnection(id[y][x])
