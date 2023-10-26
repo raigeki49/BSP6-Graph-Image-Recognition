@@ -2,7 +2,7 @@ import glob
 import subprocess
 from PIL import Image
 import numpy as np
-import Object
+import Element
 
 image_path = "weirdGraph1.png"
 folder_path = "goodGraphs/"
@@ -94,7 +94,7 @@ while (iterations == 0 or pixel_changed > 0) and iterations <= 200:
                 #If the pixel has found no neighboor whose object it can copy it will create its own object.
                 if id[j][i] == 0 and not(flag):
 
-                    id[j][i] = Object.Object(tuple(np.random.choice(range(256), size=3)))
+                    id[j][i] = Element.Object(tuple(np.random.choice(range(256), size=3)))
                     Objects.append(id[j][i])
                     pixel_changed += 1
 

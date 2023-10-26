@@ -1,5 +1,5 @@
 import numpy as np
-class Object:
+class Element:
     def __init__(self, color) -> None:
         self.pixel_coordinates = set()
         self.color = color

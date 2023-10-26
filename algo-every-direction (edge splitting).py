@@ -2,12 +2,12 @@ import glob
 import subprocess
 from PIL import Image
 import numpy as np
-import Object
+import Element
 import re
 import numpy as np
 
-image_path = "randomGraph100_150.png"
-folder_path = "newGood/"
+image_path = "graph1.png"
+folder_path = "goodGraphs/"
 iterations_folder_path ="iteration images/"
 #colors in the image graph1
 color_white = (255, 255, 255)
@@ -25,7 +25,7 @@ id = [[0 for i in range(im.size[0]) ] for i in range(im.size[1])]
 #lists to store Vertices and Edges in
 Vertices = []
 Edges = []
-Objects = []
+Elements = []
 
 
 #colors = {0}
@@ -79,7 +79,7 @@ while (iterations == 0 or pixel_changed > 0) and iterations <= 200:
                 else:
                     neighbors = [[j - 1,i - 1],[j - 1,i],[j - 1,i + 1],[j,i - 1],[j,i + 1],[j + 1,i - 1],[j + 1,i],[j + 1,i + 1]]
 
-                #center pixel tries to copy the object of the neighboor pixel
+                #center pixel tries to copy the element of the neighboor pixel
                 for x,y in neighbors:
                     if (id[j][i] == 0 or iterations>0) and not(flag):
                         if (pixel == im.getpixel((y, x))) and not(id[x][y]==0):
@@ -93,11 +93,11 @@ while (iterations == 0 or pixel_changed > 0) and iterations <= 200:
                                     flag = True
 
                 
-                #If the pixel has found no neighboor whose object it can copy it will create its own object.
+                #If the pixel has found no neighboor whose element it can copy it will create its own element.
                 if id[j][i] == 0 and not(flag):
 
-                    id[j][i] = Object.Object(tuple(np.random.choice(range(256), size=3)))
-                    Objects.append(id[j][i])
+                    id[j][i] = Element.Element(tuple(np.random.choice(range(256), size=3)))
+                    Elements.append(id[j][i])
                     pixel_changed += 1
 
 
@@ -112,7 +112,7 @@ while (iterations == 0 or pixel_changed > 0) and iterations <= 200:
                         Vertices.append(id[j][i])
                         pixel_changed += 1"""
                 
-                #add the pixels coordinates to the Edge/Vertex object
+                #add the pixels coordinates to the Edge/Vertex element
                 id[j][i].add(i,j)
 
     #change the direction with which we iterate through the pixels
@@ -134,10 +134,10 @@ while (iterations == 0 or pixel_changed > 0) and iterations <= 200:
         #draw image
         image = Image.new("RGB", im.size, (255, 255, 255))
 
-        for object in Objects:
-            pixels = object.pixel_coordinates
+        for element in Elements:
+            pixels = element.pixel_coordinates
             for pixel in pixels:
-                image.putpixel(pixel, object.color)
+                image.putpixel(pixel, element.color)
 
         image.save(iterations_folder_path + iteration + ".png")
     print("Iteration:" + iteration)
@@ -150,36 +150,36 @@ make_gif("iteration images")
 polished_Objects = []
 count = 0
 #clean objects list
-print("clean object list")
-for object in Objects:
-       if not(object.get_size() == 0):
+print("clean element list")
+for element in Elements:
+       if not(element.get_size() == 0):
               count += 1
-              object.index = str(count)
-              polished_Objects.append(object)
+              element.index = str(count)
+              polished_Objects.append(element)
 
-Objects = polished_Objects.copy()
+Elements = polished_Objects.copy()
 
 #detect circles/Verticies
 e1 = 1
 potential_Circle = []
 
-for object in Objects:
-    dimensions = object.getDimensions()
+for element in Elements:
+    dimensions = element.getDimensions()
     if abs((dimensions[1] - dimensions[0]) - (dimensions[3] - dimensions[2])) <= e1:
-        potential_Circle.append(object)
+        potential_Circle.append(element)
     else:
-        Edges.append(object)
+        Edges.append(element)
 
 e2 = 0.15
-for object in potential_Circle:
-    dimensions = object.getDimensions()
+for element in potential_Circle:
+    dimensions = element.getDimensions()
     area = (dimensions[1] - dimensions[0]) * (dimensions[3] - dimensions[2])
-    circle_area = object.get_size()
+    circle_area = element.get_size()
 
     if abs((circle_area/area) - (np.pi/4)) <= e2:
-        Vertices.append(object)
+        Vertices.append(element)
     else:
-        Edges.append(object)
+        Edges.append(element)
 
 
 
@@ -218,10 +218,10 @@ for edge in wrong_Edges:
             if(flag >=3):
                 continue
             else:
-                object = Object.Object((255,255,255))
-                object.addConnection(v1)
-                object.addConnection(v2)
-                Edges.append(object)
+                element = Element.Element((255,255,255))
+                element.addConnection(v1)
+                element.addConnection(v2)
+                Edges.append(element)
 
 
 print(len(Vertices))
