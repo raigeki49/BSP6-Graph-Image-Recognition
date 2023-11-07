@@ -6,7 +6,7 @@ import Element
 import re
 import numpy as np
 
-image_path = "randomGraph50_80_bubbles.png"
+image_path = "randomGraph300_500_bubbles.png"
 folder_path = "newGood/"
 iterations_folder_path ="iteration images/"
 #colors in the image graph1
@@ -219,6 +219,16 @@ for edge in wrong_Edges:
                 element.addConnection(v2)
                 Edges.append(element)
 
+
+#connect neighboor verticies
+for edge in Edges:
+    connected_verticies = edge.Connections.copy()
+    v1 = connected_verticies.pop()
+    v2 = connected_verticies.pop()
+    v1.addConnection(v2)
+    v2.addConnection(v1)
+
+
 G =[]
 for edge in Edges:
     G.append(edge.Connections)
@@ -274,11 +284,26 @@ else:
     not_isomorphic = True
 
 print("\nCheck Degree Sequence:")
-if len(Edges)*2 == size*2: #Degree sequence equal to 2 times the size of the graph
+degree_sequence_extracted = []
+
+for vertex in Vertices:
+    degree_sequence_extracted.append(len(vertex.Connections))
+
+degree_sequence_extracted.sort()
+
+degree_sequence_reference = []
+
+with open(folder_path + image_path + ".struct", "r") as f:
+    for line in f:
+        vertecies = re.findall(r"\d+", line)[1:]
+        degree_sequence_reference.append(len(vertecies))
+
+degree_sequence_reference.sort()
+
+if degree_sequence_extracted == degree_sequence_reference:
     print(" Same Degree Sequence")
 else:
-    print(" Not Degree Sequence")
-    not_isomorphic = True
+    print(" Not Same Degree Sequence")
 
 print("\nNumber of connected components:")
 #get component number for reference graph using DFS. https://www.baeldung.com/cs/graph-connected-components
@@ -342,6 +367,71 @@ else:
     print(" Not Same Component Count")
     not_isomorphic = True
 
+print("\nWeisfeiler Lehman Isomorphism Test:")
+#Weisfeiler Lehman Isomorphism Test
+
+def make_new_labels_extracted():
+    old_labels = labels_extracted.copy()
+    for v1 in Vertices:
+        adj_labels=[]
+        for v2 in v1.Connections:
+            adj_labels.append(old_labels[v2])
+        labels_extracted[v1] = (old_labels[v1], tuple(sorted(adj_labels)))
+
+def make_new_labels_reference():
+    old_labels = labels_reference.copy()
+    for v1 in adj:
+        adj_labels=[]
+        for v2 in adj[v1]:
+            adj_labels.append(old_labels[v2])
+        labels_reference[v1] = (old_labels[v1], tuple(sorted(adj_labels)))
+
+def compress_labels(labels):
+    old_labels = labels.copy()
+    for v in old_labels:
+        labels[v] = hash(old_labels[v])
+    
+    return labels
+
+#Initalization
+labels_extracted = {}
+for v in Vertices:
+    labels_extracted[v] = 1
+
+labels_reference = {}
+for v in adj:
+    labels_reference[v] = 1
+
+#Algortihm
+count_extracted = {}
+count_reference = {}
+i = 0
+while(not(count_extracted==count_reference) or count_extracted=={} or i<3 and i<len(Vertices)):
+    i += 1
+    make_new_labels_extracted()
+    make_new_labels_reference()
+
+    labels_extracted = compress_labels(labels_extracted)
+    labels_reference = compress_labels(labels_reference)
+
+    for v in labels_extracted:
+        label = labels_extracted[v]
+        if label in count_extracted:
+            count_extracted[label] += 1
+        else:
+            count_extracted[label] = 1
+
+    for v in labels_reference:
+        label = labels_reference[v]
+        if label in count_reference:
+            count_reference[label] += 1
+        else:
+            count_reference[label] = 1
+
+if count_extracted == count_reference:
+    print(" Passed Weisfeiler Lehman Isomorphism Test")
+else:
+    print(" Not Passed Weisfeiler Lehman Isomorphism Test")
 if not(not_isomorphic):
     print("\ncompare Expected and Extracted: \n")
     result = subprocess.run(["glasgow-subgraph-solver/build/glasgow_subgraph_solver --format csv --induced graph.csv "+ image_path +".csv"], shell=True, text=True, stdout = subprocess.PIPE)
