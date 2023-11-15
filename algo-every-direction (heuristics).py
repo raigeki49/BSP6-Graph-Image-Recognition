@@ -6,7 +6,7 @@ import Element
 import re
 import numpy as np
 
-image_path = "randomGraph300_500_bubbles.png"
+image_path = "randomGraph50_80.png"
 folder_path = "newGood/"
 iterations_folder_path ="iteration images/"
 #colors in the image graph1
@@ -304,6 +304,8 @@ if degree_sequence_extracted == degree_sequence_reference:
     print(" Same Degree Sequence")
 else:
     print(" Not Same Degree Sequence")
+    not_isomorphic = True
+    
 
 print("\nNumber of connected components:")
 #get component number for reference graph using DFS. https://www.baeldung.com/cs/graph-connected-components
@@ -432,6 +434,8 @@ if count_extracted == count_reference:
     print(" Passed Weisfeiler Lehman Isomorphism Test")
 else:
     print(" Not Passed Weisfeiler Lehman Isomorphism Test")
+    not_isomorphic = True
+
 if not(not_isomorphic):
     print("\ncompare Expected and Extracted: \n")
     result = subprocess.run(["glasgow-subgraph-solver/build/glasgow_subgraph_solver --format csv --induced graph.csv "+ image_path +".csv"], shell=True, text=True, stdout = subprocess.PIPE)

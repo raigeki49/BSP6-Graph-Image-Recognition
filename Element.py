@@ -6,7 +6,7 @@ class Element:
         self.type = 0
         self.Connections = set()
         self.index = 0
-        self.Verticies = set()
+        self.Neighbours = set()
 
     def compare(self, other):
         if self.color < other.color:
@@ -24,26 +24,20 @@ class Element:
         return len(self.pixel_coordinates)
     
     def __str__(self):
-        """if self.type == 0:
-            return f"Object" + self.index
-        elif self.type == 1:
-            return f"Vertex" + self.index
-        else:
-            return f"Edge" + self.index"""
         return str(self.index)
 
     def addConnection(self, object):
         self.Connections.add(object)
 
-    def addVertex(self, vertex):
-        self.Verticies.add(vertex)
+    def addNeighbour(self, vertex):
+        self.Neighbours.add(vertex)
 
-    def getVerticies(self):
-        if len(self.Verticies)==0:
+    def getNeighbours(self):
+        if len(self.Neighbours)==0:
             return str(self.index) + " : { }"
         else:
             string = str(self.index) + " : {"
-            for vertex in self.Verticies:
+            for vertex in self.Neighbours:
                 string += str(vertex) +", "
             return string[:-2] + "}"
         
