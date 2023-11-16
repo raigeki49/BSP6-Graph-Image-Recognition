@@ -1,53 +1,11 @@
-Clean up the code a bit for the isomorphism tests:
-- In a separate file, including the sub-functions used if any
-
-- Have each test be a function taking as input two graphs (as adjacency list) and returning True if the test passes (so maybe isomorphic), False if not (definitely not isomorphic)
-pseudo code example:
-testOrder(graph1, graph2):
-	return getOrder(graph1) == getOrder(graph2)
-
-- Have all the heuristic tests bundled in a single function that do the tests in order, so like
-heuristicTestIsomorphic(graph1, graph2):
-	test1 = testOrder(graph1,graph2)
-	if not test1:
-		return False
-	test2 = testSize(graph1, graph2)
-	if not test2:
-		return False
-	etc. for all the tests we implemented
-
-- also make a proper function for the glasgow test, like glasgowTest(graph1,graph2)
-
-- Should probably make one function that takes as input the .csv filename and returns the adjacency list (for the reference graph, I think that's more or less what you're doing at line 342 ?)
-  as well as one function that takes as input the necessary information from the parsing algorithm (so I think that would be the variables Vertices and Edges in the main code) and also returns the corresponding adjacency list
-
-- Might need to rework the code a bit to have everything work with adjacency lists (wich is a good thing, it's usually how we work with graphs)
-
-- I'm giving adjacency list as the structure to represent the graph, but maybe a proper class Graph can be more useful ? For example a class containing
-  - the list/set of vertices
-  - the list/set of all edges
-  - the adjacency list itself 
-  Up to you if that helps, it's rather close to what you have already with the Element class
-
-- Also should probably put the whole image parsing algorithm in a function proper, that takes the filename as input, and output the graph (according to the structure above), so that in the end we can really do something like
-  extractedGraph = parseGraphFromImage("file.png")
-  referenceGraph = getGraphFromCSV("file.csv")
-  testIsomorphic = heuristicTestIsomorphic(extractedGraph, referenceGraph)
-  if not testIsomorphic:
-  	print("Not isomorphic")
-  else:
-    #Do the glasgow test to be sure
-
-
-All of the above is maybe a bit more than I expected, so maybe just do that for next week
-
-
 
 Goals for OpenCV parsing:
 
 1) How do we detect lines and circles with openCV
 1.1) Getting coordinates of the pixels in each detected object (?)
 1.2) Add visualization of the detected circle/lines
+
+- Mini-tutorial on openCV ? Explain (some of) the parameters (for example).
 
 First we can assume planar graph, no intersecting edges etc. 
 2) Determine which circles (= vertices) are connected to each other with a line (= edge)
@@ -61,8 +19,8 @@ Then we are going to allow more stuff for the graph picture, and look for soluti
 - Allow non-planar graphs (but still straight lines edges)
   => How to detect intersections between two edges (if need) and get the resulting lines
 
+Main objective: Parse an image obtained by taking a picture of a graph on the whiteboard
 
-- Parse an image obtained by taking a picture of a graph on the whiteboard
 
 ============================================================
 
