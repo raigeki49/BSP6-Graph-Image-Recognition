@@ -1,4 +1,12 @@
+Try to make the edge detection work on even smaller graphs
+so that you can write the full algorithm to link edges and vertices together
 
+Try the whiteboard pictures  (fill out circles on paint if needed)
+
+
+
+
+-----------------------------------------------------------
 Goals for OpenCV parsing:
 
 1) How do we detect lines and circles with openCV
@@ -34,3 +42,19 @@ XX) What if edges are not straight lines (curvy lines) ?
 
 XX) Bonus objective:
 What if the whole graph is only one color (both vertices and edges are the same color) ?
+
+
+
+
+
+-----------------------------------------------------------
+Hints for the report:
+
+Explain how annoying it was to detect circle
+(maybe) show an exmaple of the result if you don't remove the edges
+then explain that you need to erode + dillate
+if some parameters don't seem to matter, write
+
+explain that not removing edges work for simple graphs but breaks for bubble graphs
+
+Say that it takes a lot of time to find the proper parameters for a given image, and that it might need adjustment for other images
