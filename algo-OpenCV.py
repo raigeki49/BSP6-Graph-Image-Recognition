@@ -2,8 +2,8 @@ import cv2
 import numpy as np 
 
 #image_path = "newGood/randomGraph50_80.png"
-folder_path = "mySimpleGraphs/"
-image_path = "very simple graph4.png"
+folder_path = "whiteboard/"
+image_path = "whiteboard8.JPG"
 
 #load image
 image = cv2.imread(folder_path + image_path)
