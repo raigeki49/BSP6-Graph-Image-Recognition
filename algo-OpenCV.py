@@ -2,8 +2,8 @@ import cv2
 import numpy as np 
 
 #image_path = "newGood/randomGraph50_80.png"
-folder_path = "whiteboard/"
-image_path = "whiteboard8.JPG"
+folder_path = "mySimpleGraphs/"
+image_path = "very simple graph3.png"
 
 #load image
 image = cv2.imread(folder_path + image_path)
@@ -53,7 +53,7 @@ def detectCircles(image): #https://www.geeksforgeeks.org/circle-detection-using-
 
   detected_circles = cv2.HoughCircles(gray,  
                   cv2.HOUGH_GRADIENT, 1, 100, param1 = 15, 
-              param2 = 15, minRadius = 114, maxRadius = 125) 
+              param2 = 14, minRadius = 114, maxRadius = 125) 
   
   cv2.imwrite("Circles.png", image_circles)
 
@@ -107,6 +107,7 @@ def detectEdges(img): #https://www.geeksforgeeks.org/line-detection-python-openc
   return edges
 
 def mergeLinesToEdge(lines_list):
+  """
   edges = []
   for l1 in lines_list:
     lines_list.remove(l1)
@@ -123,7 +124,8 @@ def mergeLinesToEdge(lines_list):
 
         edges.append([x1,y1,x2,y2])
 
-  return edges
+  return edges"""
+  return lines_list
 
 def checkIfInCircle(point,circles):
   for circle in circles:
@@ -143,9 +145,9 @@ def connectVertices(vertices, edges):
   for edge in edges:
     v1 = checkIfInCircle((edge[0], edge[1]), vertices)
     v2 = checkIfInCircle((edge[2], edge[3]), vertices)
-
-    adj_list[v1].add(v2)
-    adj_list[v2].add(v1)
+    if v1 and v2:
+      adj_list[v1].add(v2)
+      adj_list[v2].add(v1)
   
   return adj_list
 
