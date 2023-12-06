@@ -1,9 +1,10 @@
 import cv2
 import numpy as np 
+from math import *
 
 #image_path = "newGood/randomGraph50_80.png"
 folder_path = "mySimpleGraphs/"
-image_path = "very simple graph3.png"
+image_path = "very simple graph8 (fix of 7).png"
 
 #load image
 image = cv2.imread(folder_path + image_path)
@@ -40,6 +41,15 @@ def drawEdges(lines_list, image):
 
   cv2.imwrite('detected Edges.png', image)
 
+def angle_trunc(a):
+    while a < 0.0:
+        a += pi * 2
+    return a
+
+def getAngleBetweenPoints(p1, p2):
+    deltaY = p2[1] - p1[1]
+    deltaX = p2[0] - p1[0]
+    return angle_trunc(atan2(deltaY, deltaX))
 
 def detectCircles(image): #https://www.geeksforgeeks.org/circle-detection-using-opencv-python/
   #Creating kernel 
@@ -89,14 +99,16 @@ def detectEdges(img): #https://www.geeksforgeeks.org/line-detection-python-openc
               minLineLength=50, #Min allowed length of line
               maxLineGap=70 #Max allowed gap between line for joining them
               )
-  
-  #Iterate over points
-  for points in lines:
-    #Extracted points nested in the list
-    x1,y1,x2,y2=points[0]
 
-    #Maintain a simples lookup list for points
-    lines_list.append([x1,y1,x2,y2])
+  #make the detected lines longer, so they go inside the vertices
+  for points in lines:
+    x1,y1,x2,y2=points[0]
+    angle = getAngleBetweenPoints((x1,y1),(x2,y2)) #https://stackoverflow.com/questions/7586063/how-to-calculate-the-angle-between-a-line-and-the-horizontal-axis
+    new_x1 = int(x1 - np.cos(angle)*10)
+    new_y1 = int(y1 - np.sin(angle)*10)
+    new_x2 = int(x2 + np.cos(angle)*10)
+    new_y2 = int(y2 + np.sin(angle)*10)
+    lines_list.append([new_x1,new_y1,new_x2,new_y2])
   
   drawLines(lines_list, img.copy())
 
@@ -131,7 +143,7 @@ def checkIfInCircle(point,circles):
   for circle in circles:
     cx, cy, r = circle[0], circle[1], circle[2]
     px, py = point
-    threshold=10
+    threshold=0
     if px >= cx-r-threshold and px <= cx+r+threshold and py >= cy-r-threshold and py <= cy+r+threshold:
       return circle
   
@@ -168,6 +180,8 @@ def drawExtractedGraph(vertices, edges):
   for edge in edges:
     x1,y1,x2,y2 = edge
     cv2.line(blank_image, (x1,y1), (x2,y2), (0,0,255), 2)
+    cv2.circle(blank_image, (x1, y1), 1, (0, 255, 0), 3) 
+    cv2.circle(blank_image, (x2, y2), 1, (255, 0, 0), 3) 
 
   cv2.imwrite("Extracted Graph.png", blank_image)
 
