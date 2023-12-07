@@ -1,7 +1,14 @@
-Try to make the edge detection work on even smaller graphs
-so that you can write the full algorithm to link edges and vertices together
+"Solve" the issue of line detection for whiteboard by randomizing the parameters of HoughLinesP and merge the results inside the same graph/adjacency list
 
-Try the whiteboard pictures  (fill out circles on paint if needed)
+
+d = dict()
+- Randomize parameters, get a list of detected edges e[i]
+- increment a counter for e.g. d[tuple(e[i])] += 1
+  i.e. keep track of how many times each edge is detected
+- remove any edge with a score lower than some threshold (to be determined)
+
+
+
 
 
 
