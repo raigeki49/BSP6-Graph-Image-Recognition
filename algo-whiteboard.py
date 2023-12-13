@@ -1,6 +1,7 @@
 import cv2
 import numpy as np 
 from math import *
+import random
 
 #image_path = "newGood/randomGraph50_80.png"
 folder_path = "whiteboard/"
@@ -80,7 +81,8 @@ def detectEdges(img): #https://www.geeksforgeeks.org/line-detection-python-openc
   edges = cv2.Canny(gray,50,150,apertureSize=3)
   #Apply HoughLinesP method to 
   #to directly obtain line end points
-  lines_list =[]
+  lines_list = []
+  """
   lines = cv2.HoughLinesP(
               edges, #Input edge image
               2, #Distance resolution in pixels
@@ -88,7 +90,24 @@ def detectEdges(img): #https://www.geeksforgeeks.org/line-detection-python-openc
               threshold=40, #Min number of votes for valid line
               minLineLength=5, #Min allowed length of line
               maxLineGap=70 #Max allowed gap between line for joining them
+              )"""
+  iterations = 200 #bit high, but only way to consistently find all edges
+  for i in range(iterations):
+    detected_lines = cv2.HoughLinesP(
+              edges, #Input edge image
+              1, #Distance resolution in pixels
+              np.pi/180, #Angle resolution in radians
+              threshold = random.randint(1, 100), #Min number of votes for valid line
+              minLineLength = random.randint(1, 50), #Min allowed length of line
+              maxLineGap = random.randint(1, 100) #Max allowed gap between line for joining them
               )
+    try:
+      if i == 0:
+        lines = detected_lines.copy()
+      else:
+        lines = np.append(lines, detected_lines.copy(), axis=0)
+    except:
+      continue
 
   #make the detected lines longer, so they go inside the vertices
   for points in lines:
@@ -141,19 +160,30 @@ def checkIfInCircle(point,circles):
 
 def connectVertices(vertices, edges):
   adj_list = {}
-  true_edges=[]
+  true_edges = {}
+  correct_edges = []
   for v in vertices:
   	adj_list[v] = set()
 
   for edge in edges:
     v1 = checkIfInCircle((edge[0], edge[1]), vertices)
     v2 = checkIfInCircle((edge[2], edge[3]), vertices)
-    if v1 and v2 and (not(v1==v2)):
-      adj_list[v1].add(v2)
-      adj_list[v2].add(v1)
-      true_edges.append(edge)
+    if v1 and v2 and (not(v1==v2)):     
+      try:
+        true_edges[tuple(sorted((v1,v2)))] += 1
+      except:
+        true_edges[tuple(sorted((v1,v2)))] = 0
+      
+  for edge in true_edges:
+    if true_edges[edge] >= 0:
+      correct_edges.append(edge)
   
-  return adj_list, true_edges
+  for edge in correct_edges:
+    v1 = edge[0]
+    v2 = edge[1]
+    adj_list[v1].add(v2)
+    adj_list[v2].add(v1)
+  return adj_list, correct_edges
 
 def drawExtractedGraph(vertices, edges, image):
   blank_image = np.zeros(shape=(image.shape), dtype=np.int16)
@@ -170,7 +200,12 @@ def drawExtractedGraph(vertices, edges, image):
     cv2.circle(blank_image, (a, b), 1, (0, 0, 255), 3) 
 
   for edge in edges:
-    x1,y1,x2,y2 = edge
+    x1,y1 = edge[0][0:2]
+    x2,y2 = edge[1][0:2]
+    x1 = int(x1)
+    y1 = int(y1)
+    x2 = int(x2)
+    y2 = int(y2)
     cv2.line(blank_image, (x1,y1), (x2,y2), (0,0,255), 2)
     cv2.circle(blank_image, (x1, y1), 1, (0, 255, 0), 3) 
     cv2.circle(blank_image, (x2, y2), 1, (255, 0, 0), 3) 
