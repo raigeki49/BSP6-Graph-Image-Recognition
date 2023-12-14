@@ -65,3 +65,52 @@ if some parameters don't seem to matter, write
 explain that not removing edges work for simple graphs but breaks for bubble graphs
 
 Say that it takes a lot of time to find the proper parameters for a given image, and that it might need adjustment for other images
+
+
+about parameters in opencv:
+- documentation rather unclear
+- still some parameters that have a clear purpose, e.g. min/max radius, but implies previous knowledge about the image
+- overall, need to choose parameters for each image
+
+
+===========================================================
+Scientific Part:
+1) General structure of the algorithm
+idea: a) detect "objects" -> b) identify which type of object -> c) identify how/if each object is connected to another
+in homemade: a) done by iterating through the whole image b) check circles (how), if not circle, then edge c) neighboring pixels
+in opencv version: a & b are done at the same time (kinda) for circles, and then for edges
+Technically, last step: verify that it's correct (assuming you have the solution). 
+How ?
+
+2) Graph isomoprhisms
+2.1)definition of graph and graph ismorphism (formal and informal)
+ + example (tikz) : 2 small graphs (5-6 vertices), change the label *and* the palcement of the vertices *and* give the isomorphism
+if F is the isomorphism, then something like F(1) = B, F(2) = C etc. 
+
+2.2) How to check if 2 grpahs are isomorphic ?
+In general, hard problem, so first thing to do is use hueristics
+Order, the number of vertices
+Size, the number of edges
+degree sequence
+Number of connected components
+try to explain why these are invariants
+
+these are very simple heuristics, we also implemented a very common and reliable one called the WeisfeilerLehman algorithm
+just give pseudo code, no proof about why it works
+
+
+magic time: these are just heuristics, still need to be sure but it's very complicated to do => glasgow
+
+
+
+Technical Part:
+
+for each "thing", give 
+pseudo code
+high level explanations 
+main issues/thing to pay attention to (e.g. parameters)
+
+benchmarks
+
+Conclusion:
+advantage and disadvantage of homemade vs. opencv
